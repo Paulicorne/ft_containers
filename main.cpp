@@ -1,3 +1,5 @@
+// 42 subject's test main
+
 #include <iostream>
 #include <string>
 #include <deque>
