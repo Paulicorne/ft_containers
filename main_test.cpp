@@ -1,3 +1,5 @@
+// just testing vectors to understand them
+
 #include <iostream>
 #include <vector>
 using namespace std;

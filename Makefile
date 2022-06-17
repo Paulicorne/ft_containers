@@ -14,13 +14,13 @@ END					=    \033[0m
 
 NAME				=	vector
 
-SRCS				=	main.cpp
+SRCS				=	main_pair.cpp
 
 OBJ_PATH			=	obj
 OBJS				=	$(addprefix $(OBJ_PATH)/, $(SRCS:.cpp=.o))
 
 INC_PATH			=	.
-INCS				=	vector.hpp
+INCS				=	ft_utility.hpp
 
 CPPFLAG				=	-std=c++98
 COMP				=	c++ $(CPPFLAG) -Wall -Wextra -Werror

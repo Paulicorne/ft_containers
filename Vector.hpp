@@ -1,4 +1,7 @@
+// work in progress !
+
 #include <memory> // allocators
+#include <utility> // pair
 
 namespace ft
 {
@@ -12,7 +15,6 @@ namespace ft
 	};
 
 	
-
 	// __vector_base
 
 	template <class _Tp, class _Allocator>
