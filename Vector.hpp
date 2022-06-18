@@ -21,13 +21,15 @@ namespace ft
 	class __vector_base : protected __vector_base_common<true>
 	{
 
-	}
+	};
 	
 	template <class _Tp, class _Alloc = std::allocator<_Tp> >
-	class vector : private __vector_base<_Tp, _Allocator> // add visibility thingy ?
+	class vector : private __vector_base<_Tp, _Allocator> // linux version inherits protected ...
 	{
+		public :
+			typedef 
 
-	}
+	};
 
 
 }
