@@ -5,15 +5,15 @@
 
 void	print_pair(std::pair<int, char> p)
 {
-	std::cout << p.first << std::endl;
-	std::cout << p.second << std::endl;
+	std::cout<< '|' << p.first << '|' << std::endl;
+	std::cout<< '|' << p.second << '|' << std::endl;
 	std::cout << std::endl;
 }
 
 void	ft_print_pair(ft::pair<int, char> p)
 {
-	std::cout << p.first << std::endl;
-	std::cout << p.second << std::endl;
+	std::cout << '|' << p.first << '|' << std::endl;
+	std::cout << '|' << p.second << '|' << std::endl;
 	std::cout << std::endl;
 }
 
@@ -24,6 +24,13 @@ int main(void)
 
 	ft::pair<int, char> p2(1, '*');
 	ft_print_pair(p2);
+
+	ft::pair<int, char> p9;
+	ft_print_pair(p9);
+
+	std::pair<int, char> p8;
+	print_pair(p8);
+
 
 	//make_pair test
 

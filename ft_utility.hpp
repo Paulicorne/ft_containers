@@ -33,8 +33,6 @@ namespace ft
 		}
 	};
 
-	// recoder swap ? avec ou sans les specifications ?
-
 	// followed this source : https://en.cppreference.com/w/cpp/utility/rel_ops/operator_cmp
 	// but lacked operator== and <, added them to rel_ops
 	namespace rel_ops
@@ -106,7 +104,6 @@ namespace ft
 
 	}
 	
-
 	template <class T1, class T2>
 	pair<T1, T2> make_pair (T1 t1, T2 t2)
 	{
