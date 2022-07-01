@@ -5,7 +5,7 @@
 namespace ft
 {
   // Those "tags" are empty because they just help identifying different iterators
-  // Warning : might not be usable w/ functions like distance, advance ...
+  // Warning : might not be usable w/ functions like distance, advance ... (use the std ones instead)
 	struct input_iterator_tag { };
 	struct output_iterator_tag { };
 
