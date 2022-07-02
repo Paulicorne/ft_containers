@@ -3,12 +3,14 @@
 
 #include <memory> // allocators
 #include <utility> // pair
+#include <type_traits> // for the original enable_if, befor implementing my own
+#include <vector> // test for std::vector copy ctor
 
 #include <iostream> // for debug
 
 namespace ft
 {
-	template <class T, class Allocator = std::allocator<T> > // default allocator = std::allocator<T>
+	template <class T, class Allocator = std::allocator<T> > // default allocator will be = std::allocator<T>
 	class vector
 	{
 		public :
@@ -22,62 +24,94 @@ namespace ft
 			typedef typename Allocator::const_pointer			const_pointer;
 			typedef	value_type&									reference;
 			typedef	const value_type&							const_reference;
-			//iterator
+			typedef	std::__1::__wrap_iter<typename std::__1::vector<T, Allocator>::pointer>	iterator;
 			//const_iterator
 			//typedef 											reverse_iterator;
 			//const_reverse_iterator
 
 		private :
 			value_type*											_begin; // data/items ?
-			size_type											_end; // size ?
-			size_type											_end_cap; // capacity ?
+			size_type											_end; // size ? (actual size used)
+			size_type											_end_cap; // capacity ? (allocated memory)
 			allocator_type										_allocator;
 
 		public :
 
+
 		/* CONSTRUCTORS */
 
 		// default (empty)
-		explicit vector(const allocator_type& alloc = allocator_type()) : _begin(0), _end(0), _end_cap(0), _allocator(alloc) {} // Constructs an empty container with a default-constructed allocator.
-		//explicit vector(const Allocator& __a); //Constructs an empty container with the given allocator "__a".
+		explicit vector(const allocator_type& alloc = allocator_type())
+		: _begin(0), _end(0), _end_cap(0), _allocator(alloc) {} // Constructs an empty container with a default-constructed allocator.
+		
 		// fill
-		// problem : doesn't get called when appropriate ????
 		explicit vector(size_type count, const T& value = T(), const allocator_type& alloc = allocator_type()) 
 		: _end(count), _end_cap(count), _allocator(alloc)
 		{
+			std::cout << "=> Fill ctor called" << std::endl;
 			_begin = _allocator.allocate(count); // alloue du stockage à la taille de count
 			for (size_type i = 0; i < count; i++)
 				_allocator.construct(_begin + i, value); // construit un objet de valeur value dans tout le vector
 		} // Constructs the container with count copies of elements with value value.
 
 		// range
-		// problem : gets called instead of fill ctor ????
 		template <class InputIterator>
-		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename std::enable_if<!std::is_integral<InputIterator>::value>::type* = 0) // must add my enable_if (otherwise gets called when unwanted)
 		: _allocator(alloc)
 		{
-			std::cout << "range ctor called" << std::endl;
+			std::cout << "=> range ctor called" << std::endl;
 			if (first > last)
 				throw std::length_error("vector");
 			_end = last - first;
 			_end_cap = _end;
 			_begin = _allocator.allocate(_end_cap);
-			for (difference_type i = 0; i < static_cast<difference_type>(_end); i++) // try with size_type i to avoid cast ?
+			// for (difference_type i = 0; i < static_cast<difference_type>(_end); i++) // try with size_type i to avoid cast ?
+			for (size_type i = 0; i < size_type(_end); i++) // try with size_type i to avoid cast ?
 				_allocator.construct(_begin + i, first + i);
 		} // Constructs the container with the contents of the range [first, last).
-		// copy
-		vector(const vector& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
+
+		vector& operator= (const vector& x)
 		{
-			_begin = _allocator.allocate(_end);
-			if (_x.size() > 0) // is this really useful ?
+			if (this != &x)
 			{
-				for (size_type i = 0; i < _end; i++)
-					_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
+				clear();
+				
 			}
 		}
+
+		vector (const vector& x) : _end(0), _end_cap(0)
+		{
+			*this = x;
+		}
+
+		// // copy
+		// vector(vector& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
+		// {
+		// 	std::cout << "=> Copy ctor called" << std::endl;
+		// 	_begin = _allocator.allocate(_end);
+		// 	if (_x.size() > 0) // is this really useful ?
+		// 	{
+		// 		for (size_type i = 0; i < _end; i++)
+		// 			_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
+		// 	}
+		// }
+
+		// // copy original vector : doesn't seem to work
+		// vector(const std::vector<T>& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
+		// {
+		// 	std::cout << "=> Copy ctor called" << std::endl;
+		// 	_begin = _allocator.allocate(_end);
+		// 	if (_x.size() > 0) // is this really useful ?
+		// 	{
+		// 		for (size_type i = 0; i < _end; i++)
+		// 			_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
+		// 	}
+		// }
+
 		~vector()
 		{
-			_allocator.deallocate(_begin, _end);
+			std::cout << "=> Destructor called" << std::endl;
+			_allocator.deallocate(_begin, _end); // deallocate until _end_cap ?
 		}
 
 
@@ -94,6 +128,30 @@ namespace ft
 		reference	operator[](size_type n)
 		{
 			return (_begin[n]);
+		}
+
+		/* ITERATORS */
+
+		iterator	end();
+
+		/* METHODS */
+
+		void	pop_back()
+		{
+			if (size())
+				_allocator.destroy(&_begin[--_end]);
+		}
+
+		size_type size() const
+		{
+			// return static_cast<size_type>(this->_end - this->_begin); // use this ? but find the right cast, or change _begin type ?
+			return (_end); // temporary ?
+		}
+
+		void clear()
+		{
+			while(_end > 0)
+				pop_back();
 		}
 	};
 
