@@ -14,7 +14,7 @@ END					=    \033[0m
 
 NAME				=	vector
 
-SRCS				=	main_pair.cpp
+SRCS				=	main_vector.cpp
 
 OBJ_PATH			=	obj
 OBJS				=	$(addprefix $(OBJ_PATH)/, $(SRCS:.cpp=.o))
