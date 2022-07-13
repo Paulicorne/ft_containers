@@ -66,7 +66,7 @@ namespace ft
 			_end_cap = _end;
 			_begin = _allocator.allocate(_end_cap);
 			// for (difference_type i = 0; i < static_cast<difference_type>(_end); i++) // try with size_type i to avoid cast ?
-			for (size_type i = 0; i < size_type(_end); i++) // try with size_type i to avoid cast ?
+			for (size_type i = 0; i < size_type(_end); i++) // looks better without cast imo
 				_allocator.construct(_begin + i, first + i);
 		}
 
@@ -183,7 +183,10 @@ namespace ft
 				pop_back();
 		}
 
-		void reserve(size_type n) // change capacity
+		size_type max_size() const
+		{ return _allocator.max_size();}
+
+		void reserve(size_type n) // change vec's total capacity
 		{
 			if (n > _allocator.max_size())
 				throw std::length_error("vector::reserve");
@@ -194,14 +197,14 @@ namespace ft
 			{
 				if (_begin != NULL)
 				{
-					for (size_type i = 0; i < _end; i++)
+					for (size_type i = 0; i < _end; i++)			// copy from original vec
 						_allocator.construct(&tmp[i], _begin[i]);
 
 					size_type tmp_size = _end;
-					for (size_type i = 0; i < tmp_size; i++)
+					for (size_type i = 0; i < tmp_size; i++)		// destroy original vec's content
 						_allocator.destroy(&_begin[i]);
 
-					_allocator.deallocate(_begin, _end_cap);
+					_allocator.deallocate(_begin, _end_cap);		// deallocate og vec
 				}
 				_begin = tmp;
 				_end_cap = n;
