@@ -19,7 +19,7 @@ SRCS				=	main_vector.cpp
 OBJ_PATH			=	obj
 OBJS				=	$(addprefix $(OBJ_PATH)/, $(SRCS:.cpp=.o))
 
-INC_PATH			=	.
+INC_PATH			=	./inc
 INCS				=	ft_utility.hpp
 
 CPPFLAG				=	-std=c++98
