@@ -14,7 +14,7 @@ namespace ft
 			typedef typename random_access_iterator::difference_type	difference_type;
 			typedef T*													pointer;
 			typedef T&													reference;
-			typedef typename random_access_iterator::iterator_category	iterator_category;
+			typedef typename random_access_iterator::iterator_category	iterator_category; //  inherited from ft::iterator<>
 
 		private :
 
@@ -23,6 +23,17 @@ namespace ft
 		public :
 
 			random_access_iterator() : _ptr(NULL) {}
+			~random_access_iterator() {}
+			
+			// Pointer ctor
+			explicit random_access_iterator(pointer const& ptr) : _ptr(ptr) {}
+
+			// Copy ctor ?
+			random_access_iterator(const random_access_iterator>& x) : _ptr(x._ptr) {}
+
+			// const to non const copy ctor
+			template <const_iter>
+			random_access_iterator(random_access_iterator<const_iter> const &it) : _ptr(it.base()) {} // to pass from iterator to const_iterator
 
 			
 	};

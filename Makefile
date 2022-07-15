@@ -16,10 +16,10 @@ NAME				=	vector
 
 SRCS				=	main_vector.cpp
 
-OBJ_PATH			=	obj
+OBJ_PATH			=	.obj
 OBJS				=	$(addprefix $(OBJ_PATH)/, $(SRCS:.cpp=.o))
 
-INC_PATH			=	./inc
+INC_PATH			=	inc
 INCS				=	ft_utility.hpp
 
 CPPFLAG				=	-std=c++98
@@ -35,8 +35,8 @@ all					:	init $(NAME)
 init				:	
 						@mkdir -p $(OBJ_PATH)
 
-$(NAME)				:	$(OBJS)
-						$(COMP) $(OBJS) -o $(NAME)
+$(NAME)				:	$(SRCS)
+						$(COMP) $(SRCS) -o $(NAME)
 						@printf "$(ERASE)$(GREEN)$(NAME)\t\t-->\tCREATED\n$(END)"
 
 clean				:

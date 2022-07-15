@@ -57,7 +57,7 @@ namespace ft
       typedef const T&                              reference;
     };
 
-    /* METHODS */
+    /* FUNCTIONS */
 	// Advance
 
     template <class InputIterator, class Distance>
