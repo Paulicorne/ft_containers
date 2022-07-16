@@ -29,14 +29,15 @@ namespace ft
 			explicit random_access_iterator(pointer const& ptr) : _ptr(ptr) {}
 
 			// Copy ctor ?
-			random_access_iterator(const random_access_iterator>& x) : _ptr(x._ptr) {}
+			random_access_iterator(const random_access_iterator& x) : _ptr(x._ptr) {}
 
 			// const to non const copy ctor
-			template <const_iter>
+			template <class const_iter>
 			random_access_iterator(random_access_iterator<const_iter> const &it) : _ptr(it.base()) {} // to pass from iterator to const_iterator
 
-			random_access_iterator& operator=(const random_access_iterator x) : _ptr(x._ptr)
-			{	return *this;	}
+			random_access_iterator& operator=(const random_access_iterator x)
+			{	_ptr = x._ptr;
+				return *this;	}
 
 			const pointer& base() const { return _ptr; }
 
@@ -57,8 +58,8 @@ namespace ft
 				--(*this);
 				return tmp; }
 
-			random_access_iterator& operator+=(difference_type x) { _ptr += x; return *this }
-			random_access_iterator& operator-=(difference_type x) { _ptr -= x; return *this }
+			random_access_iterator& operator+=(difference_type x) { _ptr += x; return *this; }
+			random_access_iterator& operator-=(difference_type x) { _ptr -= x; return *this; }
 
 			random_access_iterator operator+(difference_type x) const { return random_access_iterator(_ptr + x); }
 			random_access_iterator operator-(difference_type x) const { return random_access_iterator(_ptr - x); }
@@ -66,14 +67,14 @@ namespace ft
 			bool operator==(const random_access_iterator& x) const { return (_ptr == x._ptr); }
 			bool operator!=(const random_access_iterator& x) const { return (_ptr != x._ptr); }
 			
-			bool operator<(const rand)
+			bool operator<(const random_access_iterator& x) const { return (_ptr < x._ptr); }
+			bool operator<=(const random_access_iterator& x) const { return (_ptr <= x._ptr); }
+
+			bool operator>(const random_access_iterator& x) const { return (_ptr > x._ptr); }
+			bool operator>=(const random_access_iterator& x) const { return (_ptr >= x._ptr); }
+
+			reference operator[](difference_type x) { return _ptr[x]; }
 	};
-
-  
-  
-  
-
-
 
     
 }

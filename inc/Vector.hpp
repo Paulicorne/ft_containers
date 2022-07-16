@@ -8,6 +8,9 @@
 
 #include <iostream> // for debug
 
+#include "ft_iterator_traits.hpp"
+#include "ft_iterator.hpp"
+
 namespace ft
 {
 	template <class T, class Allocator = std::allocator<T> > // default allocator will be = std::allocator<T>
@@ -24,7 +27,7 @@ namespace ft
 			typedef typename Allocator::const_pointer			const_pointer;
 			typedef	value_type&									reference;
 			typedef	const value_type&							const_reference;
-			typedef	std::__1::__wrap_iter<typename std::__1::vector<T, Allocator>::pointer>	iterator; // needs to be replaced by re implemented iterator class
+			typedef	ft::random_access_iterator<value_type>		iterator; // needs to be replaced by re implemented iterator class
 			//const_iterator
 			//typedef 											reverse_iterator;
 			//const_reverse_iterator
@@ -91,14 +94,14 @@ namespace ft
 		// }
 
 		// copy
-		vector(vector& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
+		vector(vector& _x) : _end(_x._end), _end_cap(_x._end), _allocator(_x._allocator)
 		{
 			std::cout << "=> Copy ctor called" << std::endl;
 			_begin = _allocator.allocate(_end);
 			if (_x.size() > 0) // is this really useful ?
 			{
 				for (size_type i = 0; i < _end; i++)
-					_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
+					_allocator.construct(_begin + i, *(_x._begin + i)); // might be too slow ?
 			}
 		}
 

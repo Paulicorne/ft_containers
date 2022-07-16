@@ -1,6 +1,6 @@
 # pragma once
 
-#include <cstddef> // ptrdiff_t
+#include <cstddef> // ptrdiff_t, might not work on Linux
 
 namespace ft
 {
@@ -39,22 +39,22 @@ namespace ft
   template<class T>
     struct iterator_traits<T*>
     {
-      typedef random_access_iterator_tag  iterator_category;
-      typedef T                           value_type;
-      typedef ptrdiff_t                   difference_type;
-      typedef T*                          pointer;
-      typedef T&                          reference;
+      typedef ft::random_access_iterator_tag  iterator_category;
+      typedef T                           		value_type;
+      typedef ptrdiff_t                   		difference_type;
+      typedef T*                          		pointer;
+      typedef T&                          		reference;
     };
 
 	/// Partial specialization for const pointer types.
 	template<typename T>
     struct iterator_traits<const T*>
     {
-      typedef typename random_access_iterator_tag   iterator_category;
-      typedef T                                     value_type;
-      typedef ptrdiff_t                             difference_type;
-      typedef const T*                              pointer;
-      typedef const T&                              reference;
+      typedef typename ft::random_access_iterator_tag   iterator_category;
+      typedef T                                     	value_type;
+      typedef ptrdiff_t                             	difference_type;
+      typedef const T*                              	pointer;
+      typedef const T&                              	reference;
     };
 
     /* FUNCTIONS */
@@ -72,22 +72,22 @@ namespace ft
 	{
 		if (n <= 0)
 			for (; n > 0; --n)
-				++i;
+				++it;
 		else
 			for (; n < 0; ++n)
-				--i;
+				--it;
 	}
 
 	template <class RandomAccessIterator, class Distance>
 	void advance(RandomAccessIterator& it, Distance n, ft::random_access_iterator_tag)
 	{
-		i +=n;
+		it +=n;
 	}
 
 	template <class InputIterator, class Distance>
-	void advance(InputIterator i, Distance n)
+	void advance(InputIterator it, Distance n)
 	{
-		advance(i, n, typename iterator_traits<InputIterator>::iterator_category());
+		advance(it, n, typename iterator_traits<InputIterator>::iterator_category());
 	}
 
 	// Distance
