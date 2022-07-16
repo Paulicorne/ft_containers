@@ -17,20 +17,20 @@ namespace ft
 	class vector
 	{
 		public :
-			typedef	Allocator									allocator_type;
-			//typedef std::allocator_traits<allocator_type>		alloc_traits;
-			typedef typename Allocator::size_type				size_type; // or std::size_t ?
+			typedef	Allocator										allocator_type;
+			//typedef std::allocator_traits<allocator_type>			alloc_traits;
+			typedef typename Allocator::size_type					size_type; // or std::size_t ?
 		protected :
-			typedef T											value_type;
-			typedef	typename Allocator::difference_type			difference_type; // or std::ptrdiff_t ?
-			typedef typename Allocator::pointer					pointer;
-			typedef typename Allocator::const_pointer			const_pointer;
-			typedef	value_type&									reference;
-			typedef	const value_type&							const_reference;
-			typedef	ft::random_access_iterator<value_type>		iterator; // needs to be replaced by re implemented iterator class
-			//const_iterator
-			//typedef 											reverse_iterator;
-			//const_reverse_iterator
+			typedef T												value_type;
+			typedef	typename Allocator::difference_type				difference_type; // or std::ptrdiff_t ?
+			typedef typename Allocator::pointer						pointer;
+			typedef typename Allocator::const_pointer				const_pointer;
+			typedef	value_type&										reference;
+			typedef	const value_type&								const_reference;
+			typedef	ft::random_access_iterator<value_type>			iterator; // not tested !
+			typedef ft::random_access_iterator<const_pointer>		const_iterator; // not tested !
+			//typedef 												reverse_iterator;
+			//typedef 												const_reverse_iterator;
 
 		private :
 			value_type*											_begin; // data/items ?
@@ -105,18 +105,6 @@ namespace ft
 			}
 		}
 
-		// // copy original vector : doesn't seem to work
-		// vector(const std::vector<T>& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
-		// {
-		// 	std::cout << "=> Copy ctor called" << std::endl;
-		// 	_begin = _allocator.allocate(_end);
-		// 	if (_x.size() > 0) // is this really useful ?
-		// 	{
-		// 		for (size_type i = 0; i < _end; i++)
-		// 			_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
-		// 	}
-		// }
-
 		~vector()
 		{
 			std::cout << "=> Destructor called" << std::endl;
@@ -125,6 +113,7 @@ namespace ft
 
 
 		/* OPERATORS */
+
 		// template <class T, class Allocator>
 		// // add inline thingy thing ?
 		// typename vector<T, Allocator>::reference // why this line ?
@@ -134,24 +123,22 @@ namespace ft
 		// 	return (this->_begin[__n]);
 		// }
 
-		reference	operator[](size_type n)
+		reference	operator[](size_type n) // check if n is inside bounds ?..
 		{
 			return (_begin[n]);
 		}
 
-		const_reference	operator[](size_type n) const
+		const_reference	operator[](size_type n) const // check if n is inside bounds ?..
 		{
 			return (_begin[n]);
 		}
 
 		/* ITERATORS */
 
-		// => not done yet
-
-		// iterator	begin()
-		// {
-		// 		return iterator(_begin);
-		// }
+		iterator	begin()
+		{
+				return iterator(_begin);
+		}
 
 		iterator	end()
 		{
@@ -161,13 +148,37 @@ namespace ft
 				return iterator(&_begin[_end]);
 		}
 
-		/* METHODS */
+		// Add reverse versions once reverse iterator is implemented and integrated to present code !
+		// reverse_iterator	rbegin()
+		// {	return reverse_iterator(end());}
 
-		void	pop_back()
-		{
-			if (size())
-				_allocator.destroy(&_begin[--_end]);
-		}
+		// const_reverse_iterator	rbegin() const
+		// {	return const_reverse_iterator(end());}
+
+		// reverse_iterator	rend()
+		// {	return reverse_iterator(begin());}
+
+		// const_reverse_iterator	rend() const
+		// {	return const_reverse_iterator(begin());}
+
+
+		// lol const versions are from c++11 ........
+		// const_iterator cbegin() const
+		// {	return begin();}
+
+		// const_iterator cend() const
+		// {	return end();}
+
+		// // const_reverse_iterator	crbegin() const
+		// // {	return rbegin();}
+
+		// // const_reverse_iterator	crend() const
+		// // {	return rend();}
+
+
+		/* ==== METHODS ==== */
+
+		/* CAPACITY */
 
 		size_type size() const // returns nb of elements
 		{
@@ -175,21 +186,45 @@ namespace ft
 			return (_end); // temporary ?
 		}
 
+		size_type max_size() const
+		{ return _allocator.max_size();}
+
+
+
+		// template <class _Tp, class _Allocator>
+		// void
+		// vector<_Tp, _Allocator>::resize(size_type __sz)
+		// {
+		//     size_type __cs = size();
+		//     if (__cs < __sz)
+		//         this->__append(__sz - __cs);
+		//     else if (__cs > __sz)
+		//         this->__destruct_at_end(this->__begin_ + __sz);
+		// }
+		void	resize(size_type n, value_type val = value_type())
+		{
+			if (n < _end)
+			{
+				for (size_type i = n; i < _end; i++)
+					_allocator.destroy(&_begin[i]);
+				_end = n;
+			}
+			else
+			{
+				if (n > _end_cap)
+					reserve(n);
+				for (size_type i = _end; i < n; i++)
+					_allocator.construct(&_begin[i], val);
+				_end = n;
+			}
+		}
+
 		size_type capacity() const
 		{
 			return (_end_cap);
 		}
 
-		void clear()
-		{
-			while(_end > 0)
-				pop_back();
-		}
-
-		size_type max_size() const
-		{ return _allocator.max_size();}
-
-		void reserve(size_type n) // change vec's total capacity
+		void reserve(size_type n) // change vec's total capacity to match n
 		{
 			if (n > _allocator.max_size())
 				throw std::length_error("vector::reserve");
@@ -215,7 +250,25 @@ namespace ft
 				// invalidates all pointers ?.. or not ?
 			}
 		}
+
+
+
+		/* MODIFIERS */
+
+		void	pop_back()
+		{
+			if (size())
+				_allocator.destroy(&_begin[--_end]);
+		}
+
+
+
+		void clear()
+		{
+			while(_end > 0)
+				pop_back();
+		}
+
+
 	};
-
-
 }

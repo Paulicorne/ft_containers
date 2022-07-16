@@ -327,7 +327,7 @@ class __vector_base
     : protected __vector_base_common<true>
 {
 public:
-    typedef _Allocator                               allocator_type; // lots of typedefs for cleaner code
+    typedef _Allocator                               allocator_type;
     typedef allocator_traits<allocator_type>         __alloc_traits;
     typedef typename __alloc_traits::size_type       size_type;
 protected:
