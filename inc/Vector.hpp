@@ -15,11 +15,11 @@ namespace ft
 	{
 		public :
 			typedef	Allocator									allocator_type;
-			typedef std::allocator_traits<allocator_type>		alloc_traits;
-			typedef typename alloc_traits::size_type			size_type; // or std::size_t ?
+			//typedef std::allocator_traits<allocator_type>		alloc_traits;
+			typedef typename Allocator::size_type				size_type; // or std::size_t ?
 		protected :
 			typedef T											value_type;
-			typedef	typename alloc_traits::difference_type		difference_type; // or std::ptrdiff_t ?
+			typedef	typename Allocator::difference_type			difference_type; // or std::ptrdiff_t ?
 			typedef typename Allocator::pointer					pointer;
 			typedef typename Allocator::const_pointer			const_pointer;
 			typedef	value_type&									reference;
@@ -85,22 +85,22 @@ namespace ft
 				return *this;
 		}
 
-		vector (const vector& x) : _end(0), _end_cap(0)
-		{
-			*this = x;
-		}
+		// vector (const vector& x) : _end(0), _end_cap(0)
+		// {
+		// 	*this = x;
+		// }
 
 		// copy
-		// vector(vector& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
-		// {
-		// 	std::cout << "=> Copy ctor called" << std::endl;
-		// 	_begin = _allocator.allocate(_end);
-		// 	if (_x.size() > 0) // is this really useful ?
-		// 	{
-		// 		for (size_type i = 0; i < _end; i++)
-		// 			_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
-		// 	}
-		// }
+		vector(vector& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
+		{
+			std::cout << "=> Copy ctor called" << std::endl;
+			_begin = _allocator.allocate(_end);
+			if (_x.size() > 0) // is this really useful ?
+			{
+				for (size_type i = 0; i < _end; i++)
+					_allocator.construct(_begin + i, *(_x.begin() + i)); // might be too slow ?
+			}
+		}
 
 		// // copy original vector : doesn't seem to work
 		// vector(const std::vector<T>& _x) : _end(_x.end()), _end_cap(_x.end()), _allocator(_x.get_allocator()) // tried to make it work with std::vectors, not sure it will bc of the allocator ?..
@@ -147,16 +147,16 @@ namespace ft
 
 		// iterator	begin()
 		// {
-		// 	return iterator(_begin);
+		// 		return iterator(_begin);
 		// }
 
-		// iterator	end()
-		// {
-		// 	if (_begin == NULL)
-		// 		return iterator(_begin);
-			
-		// 	return iterator(&_begin[_end]);
-		// }
+		iterator	end()
+		{
+				if (_begin == NULL)
+					return iterator(_begin);
+
+				return iterator(&_begin[_end]);
+		}
 
 		/* METHODS */
 

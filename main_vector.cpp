@@ -39,12 +39,12 @@ int main(void)
 	// std::cout << "Last value : " << d[10] << std::endl;
 	std::cout << std::endl;
 
-	// std::cout << "TESTING COPY CTOR" << std::endl << std::endl;
-	// ft::vector<int> e(c);
-	// std::vector<int> f(c);
-	// std::cout << f[0] << std::endl;
-	// std::cout << f[1] << std::endl; // random value from non initialized memory
-	// std::cout << "Size : " << f.size() << std::endl;
+	std::cout << "TESTING COPY CTOR" << std::endl << std::endl;
+	ft::vector<int> e(d);
+	std::vector<int> f(c);
+	std::cout << f[0] << std::endl;
+	std::cout << f[1] << std::endl; // random value from non initialized memory
+	std::cout << "Size : " << f.size() << std::endl;
 
 	/* COPY CTOR */
 
